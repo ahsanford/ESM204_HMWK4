@@ -17,10 +17,48 @@ library(here)
 
 
 ```{r}
+#read in the data
 damages <- read_csv(here("data","damages.csv")) %>% 
   clean_names()
 
 warming <- read_csv(here("data","warming.csv")) %>%
   clean_names()
 ```
+
+# Question 1: 
+
+Using damages.csv, estimate a quadratic damage function relating the dollar 
+value of damages to the change in global mean temperature. Estimate a model with a 
+zero intercept because damages by construction must equal zero when there is no 
+climate change. Plot your estimated damage function, overlaid with a scatterplot of
+the underlying data.
+
+```{r}
+no_climatechange <- lm(damages ~ warming +
+                         I(warming^2)-1,
+                       data = damages)
+no_predicted <- no_climatechange$fitted.values
+```
+
+```{r}
+# plot it
+ggplot(no_climatechange, aes(warming, damages)) +
+  geom_line(aes(y = no_predicted)) + 
+  geom_point() +
+  labs(title = "Monetary Damages due to Changes in Global Mean Temperature", x = "Amount of Warming (Celsius)", y = "Monetary Damages") + 
+  theme_light() + 
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+# Question 2
+
+Use warming.csv and your estimated damage function to predict damages in each year 
+under the baseline climate and the pulse scenario. Make four plots: (1) damages 
+over time without the pulse, (2) damages over time with the pulse, (3) the 
+difference in damages over time that arises from the pulse, and (4) the difference 
+in damages over time from the pulse per ton of CO2 (you can assume that each ton of
+the pulse causes the same amount of damage).
+
+
+
 
