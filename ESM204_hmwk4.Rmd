@@ -34,16 +34,17 @@ climate change. Plot your estimated damage function, overlaid with a scatterplot
 the underlying data.
 
 ```{r}
-no_climatechange <- lm(damages ~ warming +
-                         I(warming^2)-1,
+damage_climatechange <- lm(damages ~ warming +
+                         I(warming^2)-1, # I value creates a mathmateical thing. (from sandy)
                        data = damages)
-no_predicted <- no_climatechange$fitted.values
+
+damage_predicted <- damage_climatechange$fitted.values
 ```
 
 ```{r}
 # plot it
-ggplot(no_climatechange, aes(warming, damages)) +
-  geom_line(aes(y = no_predicted)) + 
+ggplot(damage_climatechange, aes(warming, damages)) +
+  geom_line(aes(y = damage_predicted)) + 
   geom_point() +
   labs(title = "Monetary Damages due to Changes in Global Mean Temperature", x = "Amount of Warming (Celsius)", y = "Monetary Damages") + 
   theme_light() + 
@@ -58,6 +59,43 @@ over time without the pulse, (2) damages over time with the pulse, (3) the
 difference in damages over time that arises from the pulse, and (4) the difference 
 in damages over time from the pulse per ton of CO2 (you can assume that each ton of
 the pulse causes the same amount of damage).
+
+```{r}
+# create a new tibble (tibble function creates a new dataset)
+baseline = tibble(warming = warming$warming_baseline)
+
+predicted_baseline = predict(damage_climatechange, newdata = baseline) # predict model from question 1. 
+
+# plot predicted baseline against year
+
+ggplot(predicted_baseline, aes(warming, year)) +
+  geom_line(aes(y = ...)) + 
+  geom_point() +
+  labs(title = "", x = "", y = "") + 
+  theme_light() + 
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+pulse = tibble(warming = warming$warming_pulse)
+
+predicted_baseline
+```
+
+
+Notes from Sandy:
+Question 1 asks:
+With the warming how much damage is there?
+
+Question 2 asks:
+We are given the warming under the pulse and no pulse scenario (baseline). 
+We use question 1 to predict the damages under the pulse and no pulse scenario.
+Step 1- create a new tibble
+baseline
+
+When I increase
+
+
 
 
 
